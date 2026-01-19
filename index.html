@@ -3,573 +3,105 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>샌드위치 정리 - 10단계 변형문제</title>
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <title>함수의 극한: 샌드위치 정리 마스터</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
-        }
-
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .header {
-            text-align: center;
-            color: white;
-            margin-bottom: 30px;
-        }
-
-        .header h1 {
-            font-size: 2em;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-        }
-
-        .header p {
-            font-size: 1.1em;
-            opacity: 0.9;
-        }
-
-        .progress-container {
-            background: rgba(255,255,255,0.2);
-            border-radius: 25px;
-            padding: 5px;
-            margin-bottom: 20px;
-        }
-
-        .progress-bar {
-            height: 20px;
-            background: linear-gradient(90deg, #00f260, #0575e6);
-            border-radius: 20px;
-            transition: width 0.5s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-            font-size: 0.8em;
-        }
-
-        .problem-card {
-            background: white;
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            margin-bottom: 20px;
-        }
-
-        .step-indicator {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .step-number {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            padding: 10px 20px;
-            border-radius: 25px;
-            font-weight: bold;
-        }
-
-        .difficulty {
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 0.9em;
-            font-weight: bold;
-        }
-
-        .difficulty.easy { background: #d4edda; color: #155724; }
-        .difficulty.medium { background: #fff3cd; color: #856404; }
-        .difficulty.hard { background: #f8d7da; color: #721c24; }
-
-        .problem-text {
-            font-size: 1.1em;
-            line-height: 1.8;
-            color: #333;
-            margin-bottom: 25px;
-            padding: 20px;
-            background: #f8f9fa;
-            border-radius: 10px;
-            border-left: 4px solid #667eea;
-        }
-
-        .options {
-            display: grid;
-            gap: 12px;
-        }
-
-        .option {
-            padding: 15px 20px;
-            background: #f0f0f0;
-            border: 2px solid transparent;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 1.1em;
-        }
-
-        .option:hover {
-            background: #e0e0e0;
-            transform: translateX(5px);
-        }
-
-        .option.selected {
-            border-color: #667eea;
-            background: #e8e0ff;
-        }
-
-        .option.correct {
-            background: #d4edda;
-            border-color: #28a745;
-        }
-
-        .option.wrong {
-            background: #f8d7da;
-            border-color: #dc3545;
-        }
-
-        .btn {
-            display: inline-block;
-            padding: 15px 40px;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            border: none;
-            border-radius: 25px;
-            font-size: 1.1em;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-top: 20px;
-        }
-
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
-        }
-
-        .btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .explanation {
-            margin-top: 20px;
-            padding: 20px;
-            background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
-            border-radius: 10px;
-            display: none;
-        }
-
-        .explanation.show {
-            display: block;
-            animation: fadeIn 0.5s ease;
-        }
-
-        .explanation h4 {
-            color: #2e7d32;
-            margin-bottom: 10px;
-        }
-
-        .hint-box {
-            background: #fff3e0;
-            padding: 15px;
-            border-radius: 10px;
-            margin-top: 15px;
-            border-left: 4px solid #ff9800;
-        }
-
-        .hint-box h5 {
-            color: #e65100;
-            margin-bottom: 8px;
-        }
-
-        .result-card {
-            text-align: center;
-            padding: 40px;
-        }
-
-        .result-card h2 {
-            font-size: 2em;
-            margin-bottom: 20px;
-            color: #333;
-        }
-
-        .score {
-            font-size: 4em;
-            font-weight: bold;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .score-text {
-            font-size: 1.2em;
-            color: #666;
-            margin: 20px 0;
-        }
-
-        .review-section {
-            margin-top: 30px;
-            text-align: left;
-        }
-
-        .review-item {
-            padding: 15px;
-            margin: 10px 0;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .review-item.correct-review {
-            background: #d4edda;
-        }
-
-        .review-item.wrong-review {
-            background: #f8d7da;
-        }
-
-        .review-icon {
-            font-size: 1.5em;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .hidden {
-            display: none;
-        }
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+        .math-display { font-size: 1.1rem; margin: 1.5rem 0; padding: 1.2rem; background-color: #ffffff; border-left: 4px solid #3b82f6; border-radius: 0.5rem; box-shadow: 0 2px 4px rgba(0,0,0,0.05); overflow-x: auto; }
+        .concept-box { background-color: #eff6ff; border-radius: 0.75rem; padding: 1.5rem; margin-bottom: 1.5rem; border: 1px solid #dbeafe; }
+        .option-label { transition: all 0.2s; cursor: pointer; display: block; }
+        .option-label:hover { background-color: #eff6ff; transform: translateY(-2px); border-color: #3b82f6; }
+        .page { display: none; }
+        .page.active { display: block; animation: fadeIn 0.5s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        button:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
     </style>
 </head>
-<body>
-    <div class="container">
-        <div class="header">
-            <h1>샌드위치 정리 마스터</h1>
-            <p>10단계 변형문제로 극한의 끼임 정리 완벽 정복!</p>
+<body class="p-4 sm:p-8 md:p-12 text-slate-800">
+    <div id="app" class="max-w-4xl mx-auto bg-white shadow-2xl rounded-3xl p-6 sm:p-10 border border-slate-100">
+        <h1 class="text-3xl sm:text-4xl font-extrabold text-center text-slate-900 mb-2">함수의 극한</h1>
+        <p class="text-center text-slate-500 mb-8">샌드위치 정리 활용 마스터 10단계</p>
+
+        <div id="page-study" class="page active">
+            <h2 class="text-2xl font-bold text-slate-800 mb-6 border-b pb-2">핵심 원리</h2>
+            <div class="concept-box">
+                <h3 class="text-xl font-bold text-blue-600 mb-3">샌드위치 정리 (조임 정리)</h3>
+                <p class="text-slate-700 mb-2">$h(x) \le f(x) \le g(x)$이고 $\displaystyle\lim_{x \to a} h(x) = \lim_{x \to a} g(x) = L$이면</p>
+                <div class="math-display">$$ \lim_{x \to a} f(x) = L $$</div>
+            </div>
+            <div class="concept-box bg-amber-50 border-amber-200">
+                <h3 class="text-xl font-bold text-amber-600 mb-3">오늘의 문제</h3>
+                <p class="text-slate-700">두 함수 $f(x)$, $g(x)$가 모든 실수 $x$에 대하여</p>
+                <div class="math-display border-amber-400">$$ -x^2 + 4x - 4 \le \frac{f(x)}{g(x)} \le 3x^2 - 4x $$</div>
+                <p class="text-slate-700">를 만족시킬 때, $\displaystyle\lim_{x \to 1} \frac{3\{f(x)\}^2 + 2\{g(x)\}^2}{f(x)g(x)}$의 값은?</p>
+                <p class="text-slate-600 text-sm mt-2">(단, $f(x)g(x) \neq 0$)</p>
+                <p class="text-slate-600 text-sm">① $-5$ ② $-4$ ③ $-3$ ④ $-2$ ⑤ $-1$</p>
+            </div>
+            <div class="mt-8 mb-4">
+                <label for="username-input" class="block text-sm font-medium text-slate-600 mb-1">학생 이름</label>
+                <input type="text" id="username-input" placeholder="이름을 입력하세요" class="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 transition shadow-sm outline-none">
+            </div>
+            <button onclick="startQuiz()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl mt-2 transition duration-300 shadow-lg transform hover:scale-[1.01]">문제 풀이 시작하기</button>
         </div>
 
-        <div class="progress-container">
-            <div class="progress-bar" id="progressBar" style="width: 10%;">1/10</div>
+        <div id="page-quiz" class="page">
+            <div id="quiz-header" class="mb-6">
+                <div class="flex justify-between items-end mb-2"><span class="text-lg font-bold text-blue-700">Step <span id="current-q-number">1</span></span><span class="text-sm text-slate-400">Total 10 Questions</span></div>
+                <div class="w-full bg-slate-100 rounded-full h-2"><div id="progress-bar" class="bg-blue-600 h-2 rounded-full transition-all duration-500" style="width: 0%"></div></div>
+            </div>
+            <div id="question-area" class="min-h-[250px] p-6 bg-slate-50 rounded-2xl border border-slate-200">
+                <p id="question-text" class="text-xl font-medium text-slate-800 mb-8 leading-relaxed"></p>
+                <div id="options-container" class="space-y-3"></div>
+            </div>
+            <div id="feedback" class="mt-6 p-4 rounded-xl text-white font-semibold hidden"></div>
+            <div class="flex gap-3 mt-8">
+                <button onclick="prevQuestion()" id="prev-btn" class="hidden px-6 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold py-4 rounded-xl transition shadow-sm">이전</button>
+                <button onclick="submitAnswer()" id="submit-btn" class="flex-1 bg-slate-900 hover:bg-slate-800 text-white font-bold py-4 rounded-xl transition shadow-md">정답 확인</button>
+                <button onclick="nextQuestion()" id="next-btn" class="hidden flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl transition shadow-md">다음 단계</button>
+            </div>
         </div>
 
-        <div class="problem-card" id="problemCard">
-            <!-- Problem content will be inserted here -->
+        <div id="page-results" class="page text-center p-8">
+            <div class="mb-6 text-6xl animate-pulse">🏆</div>
+            <h2 class="text-3xl font-extrabold text-slate-800 mb-2">학습 완료!</h2>
+            <div class="text-7xl font-black text-blue-600 my-8"><span id="final-score">0</span><span class="text-3xl text-slate-400">/10</span></div>
+            <div id="upload-status" class="text-sm text-slate-500 mb-8 h-6 font-medium">결과 저장 중...</div>
+            <button onclick="window.location.reload()" class="bg-white border-2 border-slate-900 text-slate-900 hover:bg-slate-50 font-bold py-3 px-8 rounded-xl transition shadow-sm">다시 도전하기</button>
         </div>
     </div>
 
     <script>
-        const problems = [
-            {
-                step: 1,
-                difficulty: "easy",
-                text: `모든 실수 \\(x\\)에 대하여 \\(-x^2 + 4x - 4 \\leq \\frac{f(x)}{g(x)} \\leq 3x^2 - 4x\\)를 만족시키는 두 함수 \\(f(x), g(x)\\)가 있다.<br><br>
-                \\(x = 1\\)일 때, \\(-x^2 + 4x - 4\\)의 값을 구하시오.`,
-                options: ["-1", "0", "1", "-2", "2"],
-                answer: 0,
-                explanation: `\\(x = 1\\)을 대입하면:<br>
-                \\(-1^2 + 4(1) - 4 = -1 + 4 - 4 = -1\\)<br><br>
-                <strong>핵심 포인트:</strong> 샌드위치 정리를 적용하기 위해 먼저 특정 점에서 양쪽 함수의 값을 확인합니다.`,
-                hint: "\\(x = 1\\)을 \\(-x^2 + 4x - 4\\)에 직접 대입해보세요."
-            },
-            {
-                step: 2,
-                difficulty: "easy",
-                text: `모든 실수 \\(x\\)에 대하여 \\(-x^2 + 4x - 4 \\leq \\frac{f(x)}{g(x)} \\leq 3x^2 - 4x\\)를 만족시키는 두 함수 \\(f(x), g(x)\\)가 있다.<br><br>
-                \\(x = 1\\)일 때, \\(3x^2 - 4x\\)의 값을 구하시오.`,
-                options: ["-2", "-1", "0", "1", "2"],
-                answer: 1,
-                explanation: `\\(x = 1\\)을 대입하면:<br>
-                \\(3(1)^2 - 4(1) = 3 - 4 = -1\\)<br><br>
-                <strong>중요:</strong> 양쪽 경계값이 같은 값 \\(-1\\)로 수렴합니다!`,
-                hint: "\\(x = 1\\)을 \\(3x^2 - 4x\\)에 직접 대입해보세요."
-            },
-            {
-                step: 3,
-                difficulty: "easy",
-                text: `\\(x = 1\\)에서 \\(-x^2 + 4x - 4 = -1\\)이고 \\(3x^2 - 4x = -1\\)임을 확인했다.<br><br>
-                부등식 \\(-1 \\leq \\frac{f(1)}{g(1)} \\leq -1\\)을 만족시키는 \\(\\frac{f(1)}{g(1)}\\)의 값은?`,
-                options: ["-2", "-1", "0", "1", "알 수 없다"],
-                answer: 1,
-                explanation: `부등식의 양쪽 경계가 모두 \\(-1\\)이므로:<br>
-                \\(-1 \\leq \\frac{f(1)}{g(1)} \\leq -1\\)<br><br>
-                이는 \\(\\frac{f(1)}{g(1)} = -1\\)을 의미합니다.<br><br>
-                <strong>이것이 바로 샌드위치 정리의 핵심!</strong>`,
-                hint: "양쪽 부등호의 값이 같으면, 가운데 값은 무엇이어야 할까요?"
-            },
-            {
-                step: 4,
-                difficulty: "medium",
-                text: `\\(\\frac{f(1)}{g(1)} = -1\\)일 때, \\(f(1) = -g(1)\\)이다.<br><br>
-                \\(t = \\frac{f(x)}{g(x)}\\)로 치환하면, \\(\\frac{3f(x)^2 + 2g(x)^2}{f(x)g(x)}\\)를 \\(t\\)로 나타내면?`,
-                options: ["\\(3t + \\frac{2}{t}\\)", "\\(3t^2 + 2\\)", "\\(\\frac{3t^2 + 2}{t}\\)", "\\(3t + 2t\\)", "\\(\\frac{3 + 2t^2}{t}\\)"],
-                answer: 0,
-                explanation: `\\(f(x) = t \\cdot g(x)\\)로 두면:<br><br>
-                \\(\\frac{3f(x)^2 + 2g(x)^2}{f(x)g(x)} = \\frac{3t^2g(x)^2 + 2g(x)^2}{t \\cdot g(x)^2}\\)<br><br>
-                \\(= \\frac{g(x)^2(3t^2 + 2)}{t \\cdot g(x)^2} = \\frac{3t^2 + 2}{t} = 3t + \\frac{2}{t}\\)`,
-                hint: "\\(f(x) = t \\cdot g(x)\\)로 치환하고 분자, 분모를 정리해보세요."
-            },
-            {
-                step: 5,
-                difficulty: "medium",
-                text: `\\(\\lim_{x \\to 1} \\frac{f(x)}{g(x)} = -1\\)이므로, \\(t \\to -1\\)일 때<br>
-                \\(\\lim_{t \\to -1} \\left(3t + \\frac{2}{t}\\right)\\)의 값은?`,
-                options: ["-1", "-2", "-3", "-4", "-5"],
-                answer: 4,
-                explanation: `\\(t = -1\\)을 대입하면:<br><br>
-                \\(3(-1) + \\frac{2}{-1} = -3 + (-2) = -5\\)<br><br>
-                <strong>정답은 -5입니다!</strong>`,
-                hint: "\\(t = -1\\)을 직접 대입하면 됩니다."
-            },
-            {
-                step: 6,
-                difficulty: "medium",
-                text: `모든 실수 \\(x\\)에 대하여 \\(x^2 - 2x \\leq \\frac{h(x)}{k(x)} \\leq x^2 + 2x - 4\\)를 만족시킬 때,<br><br>
-                \\(x = 2\\)에서 양쪽 경계값이 같아지는지 확인하시오. \\(x^2 - 2x\\)와 \\(x^2 + 2x - 4\\)의 \\(x = 2\\)에서의 값은?`,
-                options: ["둘 다 0", "둘 다 4", "0과 4", "4와 0", "둘 다 -4"],
-                answer: 0,
-                explanation: `\\(x = 2\\)를 대입:<br>
-                • \\(x^2 - 2x = 4 - 4 = 0\\)<br>
-                • \\(x^2 + 2x - 4 = 4 + 4 - 4 = 4\\)<br><br>
-                두 값이 다르므로 \\(x = 2\\)에서는 샌드위치 정리를 적용할 수 없습니다!`,
-                hint: "각각 \\(x = 2\\)를 대입해서 계산해보세요."
-            },
-            {
-                step: 7,
-                difficulty: "hard",
-                text: `모든 실수 \\(x\\)에 대하여 \\(2x^2 - 6x + 4 \\leq \\frac{p(x)}{q(x)} \\leq -x^2 + 2\\)를 만족시킬 때,<br><br>
-                샌드위치 정리를 적용할 수 있는 \\(x\\)의 값을 구하시오. (양쪽 경계값이 같아지는 \\(x\\))`,
-                options: ["\\(x = 0\\)", "\\(x = 1\\)", "\\(x = 2\\)", "\\(x = -1\\)", "\\(x = 3\\)"],
-                answer: 1,
-                explanation: `양쪽이 같아지려면: \\(2x^2 - 6x + 4 = -x^2 + 2\\)<br><br>
-                \\(3x^2 - 6x + 2 = 0\\)... 이건 복잡하네요.<br><br>
-                \\(x = 1\\) 대입: \\(2(1) - 6 + 4 = 0\\), \\(-1 + 2 = 1\\) → 다름<br>
-                다시 확인: \\(2x^2 - 6x + 4\\)에 \\(x=1\\): \\(2-6+4=0\\)<br>
-                \\(-x^2 + 2\\)에 \\(x=1\\): \\(-1+2=1\\) → 여전히 다름<br><br>
-                실제로 \\(x=1\\)에서: 좌변=0, 우변=1이므로 정확히 같지는 않지만, 문제의 의도상 가장 근접한 답입니다.`,
-                hint: "\\(2x^2 - 6x + 4 = -x^2 + 2\\)를 풀어보세요."
-            },
-            {
-                step: 8,
-                difficulty: "hard",
-                text: `모든 실수 \\(x\\)에 대하여 \\((x-2)^2 - 1 \\leq \\frac{f(x)}{g(x)} \\leq -(x-2)^2 - 1\\)을 만족시킬 때,<br><br>
-                \\(\\frac{f(2)}{g(2)}\\)의 값은?`,
-                options: ["0", "-1", "1", "-2", "2"],
-                answer: 1,
-                explanation: `\\(x = 2\\) 대입:<br>
-                • 좌변: \\((2-2)^2 - 1 = 0 - 1 = -1\\)<br>
-                • 우변: \\(-(2-2)^2 - 1 = 0 - 1 = -1\\)<br><br>
-                \\(-1 \\leq \\frac{f(2)}{g(2)} \\leq -1\\)<br><br>
-                따라서 \\(\\frac{f(2)}{g(2)} = -1\\)`,
-                hint: "\\(x = 2\\)에서 양쪽 경계값을 계산해보세요."
-            },
-            {
-                step: 9,
-                difficulty: "hard",
-                text: `8단계에서 \\(\\frac{f(2)}{g(2)} = -1\\)을 구했다.<br><br>
-                \\(\\lim_{x \\to 2} \\frac{5f(x)^2 - 3g(x)^2}{f(x)g(x)}\\)의 값을 구하시오.`,
-                options: ["-2", "-3", "-5", "-7", "-8"],
-                answer: 4,
-                explanation: `\\(t = \\frac{f(x)}{g(x)}\\)로 치환하면:<br><br>
-                \\(\\frac{5f(x)^2 - 3g(x)^2}{f(x)g(x)} = \\frac{5t^2 - 3}{t} = 5t - \\frac{3}{t}\\)<br><br>
-                \\(x \\to 2\\)일 때 \\(t \\to -1\\)이므로:<br>
-                \\(5(-1) - \\frac{3}{-1} = -5 + 3 = -2\\)<br><br>
-                <strong>앗, 다시 계산:</strong> \\(5(-1) - \\frac{3}{-1} = -5 - (-3) = -5 + 3 = -2\\)<br>
-                하지만 \\(\\frac{5t^2-3}{t} = 5t - \\frac{3}{t}\\)가 맞는지 확인:<br>
-                \\(\\frac{5t^2-3}{t} = 5t - \\frac{3}{t}\\) ✓<br>
-                \\(t=-1\\): \\(-5 - \\frac{3}{-1} = -5 + 3 = -2\\)<br><br>
-                정답: \\(-2\\)... 하지만 선택지에서 -8을 확인해보면 다른 해석이 있을 수 있습니다.`,
-                hint: "\\(t = \\frac{f(x)}{g(x)}\\)로 치환하고 \\(t \\to -1\\)을 적용하세요."
-            },
-            {
-                step: 10,
-                difficulty: "hard",
-                text: `<strong>[원본 문제]</strong><br><br>
-                모든 실수 \\(x\\)에 대하여 \\(-x^2 + 4x - 4 \\leq \\frac{f(x)}{g(x)} \\leq 3x^2 - 4x\\)를 만족시킬 때,<br><br>
-                \\(\\lim_{x \\to 1} \\frac{3\\{f(x)\\}^2 + 2\\{g(x)\\}^2}{f(x)g(x)}\\)의 값은?<br><br>
-                (단, \\(f(x)g(x) \\neq 0\\))`,
-                options: ["-5", "-4", "-3", "-2", "-1"],
-                answer: 0,
-                explanation: `<strong>완벽한 풀이:</strong><br><br>
-                1️⃣ \\(x = 1\\)에서 경계값 확인:<br>
-                • \\(-1^2 + 4(1) - 4 = -1\\)<br>
-                • \\(3(1)^2 - 4(1) = -1\\)<br><br>
-                2️⃣ 샌드위치 정리에 의해 \\(\\frac{f(1)}{g(1)} = -1\\)<br><br>
-                3️⃣ \\(t = \\frac{f(x)}{g(x)}\\)로 치환:<br>
-                \\(\\frac{3f(x)^2 + 2g(x)^2}{f(x)g(x)} = 3t + \\frac{2}{t}\\)<br><br>
-                4️⃣ \\(t \\to -1\\)일 때:<br>
-                \\(3(-1) + \\frac{2}{-1} = -3 - 2 = \\boxed{-5}\\)`,
-                hint: "앞서 배운 모든 단계를 종합해서 풀어보세요!"
-            }
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzB5ALdepM0Tu4II9BeHGDAdaC0qd2OXJp6Ofubwjc2FZ5f1aChz9ZCb1lBxkp12Xy2/exec';
+        let currentQuestionIndex = 0, userName = "", userAnswers = [];
+
+        const questions = [
+            { q: "$x = 1$일 때 좌변 $-x^2 + 4x - 4$의 값은?", options: ["$-1$", "$0$", "$1$", "$-2$"], ans: "$-1$", exp: "$-1 + 4 - 4 = -1$" },
+            { q: "$x = 1$일 때 우변 $3x^2 - 4x$의 값은?", options: ["$-1$", "$0$", "$1$", "$-2$"], ans: "$-1$", exp: "$3 - 4 = -1$" },
+            { q: "샌드위치 정리에 의해 $\\displaystyle\\lim_{x \\to 1} \\frac{f(x)}{g(x)}$의 값은?", options: ["$-1$", "$0$", "$1$", "존재하지 않는다"], ans: "$-1$", exp: "좌변과 우변 모두 $-1$이므로 샌드위치 정리에 의해 $\\frac{f}{g} \\to -1$" },
+            { q: "$\\frac{f(x)}{g(x)} = k$라 하면 $k = -1$일 때, $\\frac{g(x)}{f(x)}$의 값은?", options: ["$-1$", "$1$", "$\\frac{1}{-1} = -1$", "정의되지 않음"], ans: "$-1$", exp: "$\\frac{g}{f} = \\frac{1}{k} = \\frac{1}{-1} = -1$" },
+            { q: "주어진 식을 $\\frac{f}{g}$로 나타내면: $\\frac{3f^2 + 2g^2}{fg} = ?$", options: ["$3\\frac{f}{g} + 2\\frac{g}{f}$", "$\\frac{3f + 2g}{fg}$", "$3\\frac{f^2}{g} + 2g$", "$\\frac{3f}{g} + \\frac{2g}{f}$"], ans: "$3\\frac{f}{g} + 2\\frac{g}{f}$", exp: "$\\frac{3f^2}{fg} + \\frac{2g^2}{fg} = 3\\frac{f}{g} + 2\\frac{g}{f}$" },
+            { q: "$\\frac{f}{g} = -1$을 대입하면 $3 \\cdot (-1) + 2 \\cdot (-1) = ?$", options: ["$-5$", "$-3$", "$-1$", "$5$"], ans: "$-5$", exp: "$-3 + (-2) = -5$" },
+            { q: "**[검증]** $f(x) = -x$, $g(x) = x$일 때 $\\frac{f}{g}$는?", options: ["$-1$", "$1$", "$0$", "$x$"], ans: "$-1$", exp: "$\\frac{-x}{x} = -1$" },
+            { q: "**[유사]** $\\displaystyle\\lim_{x \\to a} \\frac{f(x)}{g(x)} = 2$일 때 $\\displaystyle\\lim_{x \\to a} \\frac{f^2 + g^2}{fg}$는?", options: ["$\\frac{5}{2}$", "$3$", "$\\frac{7}{2}$", "$4$"], ans: "$\\frac{5}{2}$", exp: "$\\frac{f}{g} + \\frac{g}{f} = 2 + \\frac{1}{2} = \\frac{5}{2}$" },
+            { q: "**[응용]** $\\frac{f}{g} = k$일 때 $\\frac{af^2 + bg^2}{fg}$를 $k$로 표현하면?", options: ["$ak + \\frac{b}{k}$", "$\\frac{a}{k} + bk$", "$abk$", "$\\frac{ab}{k}$"], ans: "$ak + \\frac{b}{k}$", exp: "$a \\cdot \\frac{f}{g} + b \\cdot \\frac{g}{f} = ak + \\frac{b}{k}$" },
+            { q: "**[최종]** 원래 문제의 정답은?", options: ["① $-5$", "② $-4$", "③ $-3$", "④ $-2$", "⑤ $-1$"], ans: "① $-5$", exp: "$\\frac{f}{g} = -1$이므로 $3(-1) + 2(-1) = -5$" }
         ];
 
-        let currentProblem = 0;
-        let score = 0;
-        let answers = [];
-        let selectedOption = null;
-        let answered = false;
-
-        function renderProblem() {
-            const problem = problems[currentProblem];
-            const card = document.getElementById('problemCard');
-
-            let optionsHtml = problem.options.map((opt, idx) =>
-                `<div class="option" data-index="${idx}" onclick="selectOption(${idx})">
-                    ${String.fromCharCode(9312 + idx)} \\(${opt}\\)
-                </div>`
-            ).join('');
-
-            card.innerHTML = `
-                <div class="step-indicator">
-                    <span class="step-number">Step ${problem.step}</span>
-                    <span class="difficulty ${problem.difficulty}">
-                        ${problem.difficulty === 'easy' ? '기초' : problem.difficulty === 'medium' ? '중급' : '심화'}
-                    </span>
-                </div>
-                <div class="problem-text">${problem.text}</div>
-                <div class="options">${optionsHtml}</div>
-                <div class="hint-box">
-                    <h5>힌트</h5>
-                    <p>${problem.hint}</p>
-                </div>
-                <button class="btn" id="submitBtn" onclick="submitAnswer()" disabled>정답 확인</button>
-                <div class="explanation" id="explanation">
-                    <h4>풀이</h4>
-                    <p>${problem.explanation}</p>
-                </div>
-            `;
-
-            selectedOption = null;
-            answered = false;
-
-            // Re-render MathJax
-            if (window.MathJax) {
-                MathJax.typesetPromise();
-            }
-        }
-
-        function selectOption(idx) {
-            if (answered) return;
-
-            document.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
-            document.querySelector(`.option[data-index="${idx}"]`).classList.add('selected');
-            selectedOption = idx;
-            document.getElementById('submitBtn').disabled = false;
-        }
-
-        function submitAnswer() {
-            if (selectedOption === null || answered) return;
-
-            answered = true;
-            const problem = problems[currentProblem];
-            const options = document.querySelectorAll('.option');
-
-            if (selectedOption === problem.answer) {
-                options[selectedOption].classList.add('correct');
-                score++;
-            } else {
-                options[selectedOption].classList.add('wrong');
-                options[problem.answer].classList.add('correct');
-            }
-
-            answers.push({
-                problem: currentProblem + 1,
-                correct: selectedOption === problem.answer,
-                selected: selectedOption,
-                answer: problem.answer
-            });
-
-            document.getElementById('explanation').classList.add('show');
-
-            const btn = document.getElementById('submitBtn');
-            btn.textContent = currentProblem < problems.length - 1 ? '다음 문제' : '결과 보기';
-            btn.onclick = nextProblem;
-            btn.disabled = false;
-
-            // Re-render MathJax for explanation
-            if (window.MathJax) {
-                MathJax.typesetPromise();
-            }
-        }
-
-        function nextProblem() {
-            currentProblem++;
-
-            if (currentProblem >= problems.length) {
-                showResult();
-                return;
-            }
-
-            const progress = ((currentProblem + 1) / problems.length) * 100;
-            const progressBar = document.getElementById('progressBar');
-            progressBar.style.width = progress + '%';
-            progressBar.textContent = `${currentProblem + 1}/${problems.length}`;
-
-            renderProblem();
-        }
-
-        function showResult() {
-            const card = document.getElementById('problemCard');
-            const percentage = Math.round((score / problems.length) * 100);
-
-            let message = '';
-            if (percentage >= 90) message = '완벽합니다! 샌드위치 정리 마스터!';
-            else if (percentage >= 70) message = '잘했어요! 조금만 더 연습하면 완벽!';
-            else if (percentage >= 50) message = '좋아요! 기본 개념은 이해했어요!';
-            else message = '다시 도전해보세요! 화이팅!';
-
-            let reviewHtml = answers.map((ans, idx) => `
-                <div class="review-item ${ans.correct ? 'correct-review' : 'wrong-review'}">
-                    <span class="review-icon">${ans.correct ? '✓' : '✗'}</span>
-                    <span>Step ${ans.problem}: ${ans.correct ? '정답' : '오답'}</span>
-                </div>
-            `).join('');
-
-            card.innerHTML = `
-                <div class="result-card">
-                    <h2>퀴즈 완료!</h2>
-                    <div class="score">${score}/${problems.length}</div>
-                    <p class="score-text">${message}</p>
-                    <div class="review-section">
-                        <h3>결과 요약</h3>
-                        ${reviewHtml}
-                    </div>
-                    <button class="btn" onclick="restart()">다시 도전하기</button>
-                </div>
-            `;
-
-            document.getElementById('progressBar').style.width = '100%';
-            document.getElementById('progressBar').textContent = '완료!';
-        }
-
-        function restart() {
-            currentProblem = 0;
-            score = 0;
-            answers = [];
-            document.getElementById('progressBar').style.width = '10%';
-            document.getElementById('progressBar').textContent = '1/10';
-            renderProblem();
-        }
-
-        // Initialize
-        renderProblem();
+        userAnswers = new Array(questions.length).fill(null);
+        function renderMath(element) { renderMathInElement(element || document.body, { delimiters: [{left: "$$", right: "$$", display: true}, {left: "$", right: "$", display: false}], throwOnError: false }); }
+        function showPage(id) { document.querySelectorAll('.page').forEach(p => p.classList.remove('active')); document.getElementById(id).classList.add('active'); }
+        function startQuiz() { userName = document.getElementById('username-input').value.trim(); if (!userName) return alert("이름을 입력해주세요!"); showPage('page-quiz'); loadQuestion(); }
+        function loadQuestion() { const q = questions[currentQuestionIndex]; document.getElementById('current-q-number').textContent = currentQuestionIndex + 1; document.getElementById('question-text').innerHTML = q.q; document.getElementById('progress-bar').style.width = `${(currentQuestionIndex / questions.length) * 100}%`; const optContainer = document.getElementById('options-container'), prevBtn = document.getElementById('prev-btn'), submitBtn = document.getElementById('submit-btn'), nextBtn = document.getElementById('next-btn'), feedbackDiv = document.getElementById('feedback'); optContainer.innerHTML = ''; const existingAnswer = userAnswers[currentQuestionIndex]; q.options.forEach(opt => { const label = document.createElement('label'); label.className = "option-label block p-4 bg-white border border-slate-200 rounded-xl shadow-sm"; const isChecked = existingAnswer && existingAnswer.selected === opt; label.innerHTML = `<div class="flex items-center"><input type="radio" name="quiz-opt" value="${opt}" class="w-5 h-5 text-blue-600 border-gray-300 focus:ring-blue-500 mr-3" ${isChecked ? 'checked' : ''} ${existingAnswer ? 'disabled' : ''}><span class="text-lg ${existingAnswer ? 'text-slate-600' : ''}">${opt}</span></div>`; optContainer.appendChild(label); }); prevBtn.classList.toggle('hidden', currentQuestionIndex === 0); if (existingAnswer) { showFeedbackUI(existingAnswer.isCorrect, q.ans, q.exp); submitBtn.classList.add('hidden'); nextBtn.classList.remove('hidden'); } else { feedbackDiv.classList.add('hidden'); submitBtn.classList.remove('hidden'); nextBtn.classList.add('hidden'); } renderMath(document.getElementById('question-area')); }
+        function showFeedbackUI(isCorrect, ans, exp) { const fb = document.getElementById('feedback'); fb.classList.remove('hidden'); fb.className = `mt-6 p-5 rounded-xl text-white shadow-lg ${isCorrect ? 'bg-emerald-500' : 'bg-rose-500'}`; fb.innerHTML = `<div class="flex items-center mb-2"><span class="text-2xl mr-2">${isCorrect ? '🎉' : '❌'}</span><span class="text-lg font-bold">${isCorrect ? "정답입니다!" : "아쉽네요."}</span></div>${!isCorrect ? `<div class="mb-2">정답: <strong>${ans}</strong></div>` : ''}<div class="text-sm font-normal opacity-90 border-t border-white/20 pt-2 mt-2 leading-relaxed">${exp}</div>`; renderMath(fb); }
+        function submitAnswer() { const selected = document.querySelector('input[name="quiz-opt"]:checked'); if (!selected) return alert("보기를 선택해주세요!"); const q = questions[currentQuestionIndex]; const clean = (s) => s.replace(/\s/g, ''); const isCorrect = clean(selected.value) === clean(q.ans); userAnswers[currentQuestionIndex] = { selected: selected.value, isCorrect: isCorrect }; showFeedbackUI(isCorrect, q.ans, q.exp); document.querySelectorAll('input[name="quiz-opt"]').forEach(r => r.disabled = true); document.getElementById('submit-btn').classList.add('hidden'); document.getElementById('next-btn').classList.remove('hidden'); }
+        function prevQuestion() { if (currentQuestionIndex > 0) { currentQuestionIndex--; loadQuestion(); } }
+        function nextQuestion() { currentQuestionIndex++; if (currentQuestionIndex < questions.length) { loadQuestion(); } else { finishQuiz(); } }
+        function finishQuiz() { showPage('page-results'); const finalScore = userAnswers.filter(a => a && a.isCorrect).length; const scoreDisplay = document.getElementById('final-score'); let currentDisplayScore = 0; const interval = setInterval(() => { if (currentDisplayScore >= finalScore) { clearInterval(interval); scoreDisplay.textContent = finalScore; } else { currentDisplayScore++; scoreDisplay.textContent = currentDisplayScore; } }, 100); if(finalScore === 0) scoreDisplay.textContent = 0; sendResult(finalScore); }
+        function sendResult(finalScore) { const status = document.getElementById('upload-status'); const data = { name: userName, score: finalScore, quizTitle: "2522-샌드위치정리", date: new Date().toLocaleString() }; fetch(GOOGLE_SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(data) }).then(() => { status.textContent = "결과가 안전하게 저장되었습니다."; status.classList.replace('text-slate-500', 'text-emerald-600'); }).catch(() => { status.textContent = "결과 저장에 실패했습니다."; status.classList.replace('text-slate-500', 'text-rose-600'); }); }
+        window.onload = () => renderMath();
     </script>
 </body>
 </html>
